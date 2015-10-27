@@ -17,4 +17,4 @@ Export the variables before running the playbook
 #Configuration Variables
 They are located in vars/aws_vars.yml.
 You can configure them according your needs. 
-
+Please define dbpassword value.
