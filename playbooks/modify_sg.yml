@@ -1,0 +1,127 @@
+    - name: Modify NAT instance SG
+      ec2_group:
+         name: "{{ prefix }}-nat-websg"
+         description: security group
+         vpc_id: "{{ vpc.vpc_id }}"
+         region: "{{ region }}"
+         rules:
+           - proto: tcp
+             from_port: 22
+             to_port: 22
+             cidr_ip: 0.0.0.0/0
+           - proto: tcp
+             from_port: 80
+             to_port: 80
+             group_id: "{{ web_sg.group_id }}"
+           - proto: tcp
+             from_port: 443
+             to_port: 443
+             group_id: "{{ web_sg.group_id }}"
+           - proto: icmp
+             from_port: 8
+             to_port:  -1
+             group_id: "{{ web_sg.group_id }}"
+         rules_egress:
+           - proto: tcp
+             from_port: 22
+             to_port: 22
+             cidr_ip: 0.0.0.0/0
+           - proto: tcp
+             from_port: 80
+             to_port: 80
+             cidr_ip: 0.0.0.0/0
+           - proto: tcp
+             from_port: 443
+             to_port: 443
+             cidr_ip: 0.0.0.0/0
+           - proto: icmp
+             from_port: 8
+             to_port:  -1
+             cidr_ip: 0.0.0.0/0
+
+    - name: Modify Nginx instance SG
+      ec2_group:
+         name: "{{ prefix }}-nginx-websg"
+         description: security group
+         vpc_id: "{{ vpc.vpc_id }}"
+         region: "{{ region }}"
+         rules:
+           - proto: tcp
+             from_port: 22
+             to_port: 22
+             group_id: "{{ nat_sg.group_id }}"
+           - proto: tcp
+             from_port: 8000
+             to_port: 8005
+             group_id: "{{ elb_sg.group_id }}"
+           - proto: icmp
+             from_port: 8
+             to_port:  -1
+             group_id: "{{ nat_sg.group_id }}"
+         rules_egress:
+           - proto: tcp
+             from_port: 80
+             to_port: 80
+             cidr_ip: 0.0.0.0/0
+           - proto: tcp
+             from_port: 22
+             to_port: 22
+             cidr_ip: 0.0.0.0/0
+           - proto: icmp
+             from_port: 8
+             to_port:  -1
+             cidr_ip: 0.0.0.0/0
+           - proto: tcp 
+             from_port: 3306
+             to_port:  3306
+             group_id: "{{ db_sg.group_id }}"
+           - proto: all
+             from_port: 0
+             to_port:  65535
+             group_id: "{{ elb_sg.group_id }}"
+
+    - name: Modify MySQL RDS SG
+      ec2_group:
+         name: "{{ prefix }}-mysql-dbsg"
+         description: security group
+         vpc_id: "{{ vpc.vpc_id }}"
+         region: "{{ region }}"
+         rules:
+           - proto: tcp
+             from_port: 3306
+             to_port: 3306
+             group_id: "{{ web_sg.group_id }}"
+           - proto: icmp
+             from_port: 8
+             to_port:  -1
+             group_id: "{{ web_sg.group_id }}"
+         rules_egress:
+           - proto: all
+             from_port: 0
+             to_port: 65535
+             group_id: "{{ web_sg.group_id }}"
+
+    - name: Modify ELB Security group
+      ec2_group:
+         name: "{{ prefix }}-ec2-elbsg"
+         description: security group
+         vpc_id: "{{ vpc.vpc_id }}"
+         region: "{{ region }}"
+         rules:
+           - proto: tcp 
+             from_port: 80
+             to_port: 80
+             cidr_ip: 0.0.0.0/0
+           - proto: tcp
+             from_port: 443
+             to_port: 443
+             cidr_ip: 0.0.0.0/0
+           - proto: icmp
+             from_port: 8
+             to_port:  -1
+             group_id: "{{ web_sg.group_id }}"
+         rules_egress:
+           - proto: all
+             from_port: 0
+             to_port: 65535
+             cidr_ip: 0.0.0.0/0

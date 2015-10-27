@@ -1,0 +1,31 @@
+    - name: Create NAT Security group
+      ec2_group:
+         name: "{{ prefix }}-nat-websg"
+         description: security group
+         vpc_id: "{{ vpc.vpc_id }}"
+         region: "{{ region }}"
+      register: nat_sg
+
+    - name: Create Nginx Security group
+      ec2_group:
+         name: "{{ prefix }}-nginx-websg"
+         description: security group
+         vpc_id: "{{ vpc.vpc_id }}"
+         region: "{{ region }}"
+      register: web_sg
+
+    - name: Create MySQL Security group
+      ec2_group:
+         name: "{{ prefix }}-mysql-dbsg"
+         description: security group
+         vpc_id: "{{ vpc.vpc_id }}"
+         region: "{{ region }}"
+      register: db_sg
+
+    - name: Create ELB Security group
+      ec2_group:
+         name: "{{ prefix }}-ec2-elbsg"
+         description: security group
+         vpc_id: "{{ vpc.vpc_id }}"
+         region: "{{ region }}"
+      register: elb_sg

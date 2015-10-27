@@ -1,0 +1,24 @@
+   - name: Install nginx
+     apt: name=nginx update_cache=yes cache_valid_time=3600
+
+   - name: Copy nginx config
+     copy: src=files/nginx/nginx.conf dest=/etc/nginx/sites-available/default
+
+   - name: Create directory
+     file: path=/var/www state=directory mode=0755 owner=www-data
+
+   - name: Copy files
+     copy: src=files/sites/{{ item }} dest=/var/www/ mode=0755 owner=www-data
+     with_items:
+       - site1
+       - site2
+       - site3
+
+   - name: enable configuration
+     file: >
+       dest=/etc/nginx/sites-enabled/default
+       src=/etc/nginx/sites-available/default
+       state=link
+
+   - name: restart nginx
+     service: name=nginx state=restarted

@@ -1,0 +1,9 @@
+  - name: Create Keypair
+    ec2_key: name={{ key }} region={{ region }}
+    register: keypair
+  - name: write the key to a file
+    copy:
+      dest: ./{{ key }}.pem
+      content: "{{ keypair.key.private_key }}"
+      mode: 0600
+    when: keypair.changed

@@ -1,0 +1,32 @@
+#!/usr/bin/env ansible-playbook
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  vars_files:
+    - vars/aws_vars.yml
+  tasks:    
+    - include: playbooks/find_ubuntu_ami.yml
+    - include: playbooks/create_keypair.yml
+    - include: playbooks/create_vpc.yml
+    - include: playbooks/create_vpc_gw.yml
+    - include: playbooks/create_public_subnet.yml 
+    - include: playbooks/create_sg.yml
+    - include: playbooks/modify_sg.yml
+    - include: playbooks/launch_nat.yml 
+    - include: playbooks/create_private_subnet.yml
+    - include: playbooks/launch_nginx.yml image={{ ubuntu_image.ami }}
+    - include: playbooks/add_to_inventory.yml
+    - include: playbooks/launch_rds.yml
+    - include: playbooks/elb.yml lb_name=ansibile-elb1 port=8000
+    - include: playbooks/elb.yml lb_name=ansible-elb2 port=8001
+    - include: playbooks/elb.yml lb_name=ansible-elb3 port=8002
+    - include: playbooks/wait_for_ssh.yml
+
+- name: Configure Nginx EC2 instance
+  hosts: nginx
+  become: True
+  gather_facts: True
+  tasks:
+    - include: playbooks/nginx_conf.yml
+  roles:
+    - ansible-os-hardening 

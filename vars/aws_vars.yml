@@ -1,0 +1,19 @@
+region: us-east-1
+prefix: ansible
+az0: us-east-1a
+az1: us-east-1c
+key: ansible-key 
+ansible_user: ubuntu
+nat_user: ec2-user
+instance_type: t2.micro
+image: ami-303b1458
+dbusername: ansible
+dbpassword:  
+dbengineversion: 5.6.23
+dbinstancetype: db.t1.micro
+dbinstancename: ansiblerds
+vpc_cidr: 172.16.0.0/20
+pub_subnet_cidr1: 172.16.0.0/24
+pub_subnet_cidr2: 172.16.3.0/24
+priv_subnet_cidr1: 172.16.1.0/24
+priv_subnet_cidr2: 172.16.4.0/24

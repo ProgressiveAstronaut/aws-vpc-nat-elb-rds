@@ -1,0 +1,7 @@
+    - name: Create a VPC
+      ec2_vpc:
+         state: present
+         cidr_block: "{{ vpc_cidr }}" 
+         region: "{{ region }}"
+         resource_tags: '{"Name":"{{ prefix }}_vpc"}'
+      register: vpc

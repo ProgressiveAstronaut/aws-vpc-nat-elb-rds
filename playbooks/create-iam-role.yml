@@ -1,0 +1,7 @@
+- name:
+  iam_policy:
+    iam_type: role
+    iam_name: ansible-ec2-role
+    policy_name: "READ-ONLY"
+    policy_document: ../files/ec2_iam_role.json
+    state: present

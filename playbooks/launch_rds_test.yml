@@ -1,0 +1,25 @@
+#    - rds_subnet_group:
+#        state: present
+#        name: ansible-db-subnet
+#        description: db subnet
+#        subnets:
+#          - subnet-a0989ef9
+#          - subnet-40b6806b
+
+    - rds:
+        command: create
+        instance_name: "{{ dbinstancename }}"
+        db_engine: MySQL
+        engine_version: "{{ dbengineversion }}"
+        size: 10
+        instance_type: "{{ dbinstancetype }}"
+        multi_zone: no
+        publicly_accessible: no
+        subnet : ansible-db-subnet
+        vpc_security_groups: sg-9708a8f1
+        zone: "{{ az1 }}"
+        region: "{{ region }}"
+        username: "{{ dbusername }}"
+        password: "{{ dbpassword }}"
+        tags:
+          Environment: ansible
