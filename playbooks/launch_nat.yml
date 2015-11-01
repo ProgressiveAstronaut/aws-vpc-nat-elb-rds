@@ -8,9 +8,17 @@
          vpc_subnet_id: "{{ public1.subnet.id }}"
          instance_tags:
             Name: "{{ prefix }}_nat"
-         assign_public_ip: yes
+         assign_public_ip: no 
          source_dest_check: no
          wait: yes
       register: ec2_nat
   
     - debug: var=ec2_nat
+
+    - name: Attach EIP to the NAT instance
+      ec2_eip:
+        device_id: "{{ ec2_nat.instances[0].id }}"
+        in_vpc: yes
+      register: ec2_nat_eip
+
+    - debug: var=ec2_nat_eip
