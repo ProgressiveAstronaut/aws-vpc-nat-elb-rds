@@ -1,2 +1,2 @@
     - name: Add nginx instance to ansible group
-      add_host: hostname={{ ec2_nginx.instances[0].private_ip }} groupname=nginx ansible_user={{ ansible_user }} ansible_ssh_private_key_file={{ key }}.pem ansible_ssh_extra_args="-t -o ProxyCommand='ssh -i {{ key }}.pem {{ nat_user }}@{{ ec2_nat_eip.public_ip }} nc {{ ec2_nginx.instances[0].private_ip }} 22'"
+      add_host: hostname={{ ec2_nginx.instances[0].private_ip }} ansible_host={{ ec2_nat_eip.public_ip }} ansible_connection=ssh groupname=nginx ansible_user={{ ansible_user }} ansible_ssh_private_key_file={{ key }}.pem ansible_ssh_extra_args="-t -o ProxyCommand='ssh -i {{ key }}.pem {{ nat_user }}@{{ ec2_nat_eip.public_ip }} nc {{ ec2_nginx.instances[0].private_ip }} 22'"
